@@ -2,7 +2,6 @@
 
 **This mod modifies your save files automatically. Always BACKUP your KSP saves before using AnchorFixer!**
 
-Even though AnchorFixer is designed to fix a specific bug with Ground Anchors, any automated tool that writes to `.sfs` files could potentially cause unexpected behavior.
 
 ---
 
