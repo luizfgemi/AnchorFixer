@@ -1,0 +1,61 @@
+# .github/workflows/build.yml
+name: Build and Release AnchorFixer
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+  release:
+    types: [published]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup .NET Framework (with Mono)
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '4.7.2'
+
+      - name: Install Mono
+        run: sudo apt-get install -y mono-complete
+
+      - name: Build AnchorFixer DLL
+        run: |
+          msbuild AnchorFixer.csproj /p:Configuration=Release
+
+      - name: Create mod zip
+        run: |
+          mkdir -p dist/GameData/AnchorFixer/Plugins
+          cp bin/AnchorFixer.dll dist/GameData/AnchorFixer/Plugins/
+          cp AnchorFixer.version dist/GameData/AnchorFixer/
+          cd dist && zip -r AnchorFixer-${{ github.ref_name }}.zip GameData
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: AnchorFixer-${{ github.ref_name }}
+          path: dist/AnchorFixer-${{ github.ref_name }}.zip
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.event_name == 'release'
+
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: AnchorFixer-${{ github.ref_name }}
+
+      - name: Upload to GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: AnchorFixer-${{ github.ref_name }}.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
