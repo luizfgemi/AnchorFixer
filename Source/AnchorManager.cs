@@ -23,6 +23,9 @@ public class AnchorManager
         var vessels = node.GetNode("FLIGHTSTATE")?.GetNodes("VESSEL");
         if (vessels == null) return;
 
+        int totalAnchors = 0;
+        int anchorsFixed = 0;
+
         foreach (var vessel in vessels)
         {
             foreach (var part in vessel.GetNodes("PART"))
@@ -30,6 +33,7 @@ public class AnchorManager
                 string partName = part.GetValue("part");
                 if (partName.Contains("groundAnchor"))
                 {
+                    totalAnchors++;
                     uint flightID = uint.Parse(part.GetValue("flightID"));
                     if (anchorOriginalPositions.TryGetValue(flightID, out Vector3d originalPos))
                     {
@@ -38,6 +42,7 @@ public class AnchorManager
 
                         if (currentPos != originalPos)
                         {
+                            anchorsFixed++;
                             Debug.Log($"[AnchorFixer] Restoring ID {flightID} from {currentPos} to {originalPos}");
                             part.SetValue("pos", $"{originalPos.x} , {originalPos.y} , {originalPos.z}", true);
                         }
@@ -45,7 +50,10 @@ public class AnchorManager
                 }
             }
         }
+
+        Debug.Log($"[AnchorFixer] Save hook processed {totalAnchors} anchors. Restored {anchorsFixed} anchors.");
     }
+
 
     public void SaveAnchorsToFile()
     {
