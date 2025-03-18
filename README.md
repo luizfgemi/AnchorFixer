@@ -27,7 +27,7 @@ This mod automatically detects when Ground Anchors are placed in the scene and p
 - **CKAN:** CKAN-ready using the provided `AnchorFixer.version` metadata
 
 ### Credits:
-- **OliverWieland** for the original script ([ksp-anchor-keeper](https://github.com/OliverWieland/ksp-anchor-keeper))
+- **OliverWieland** for the original idea ([ksp-anchor-keeper](https://github.com/OliverWieland/ksp-anchor-keeper))
 
 ### 📝 License:
 - MIT
