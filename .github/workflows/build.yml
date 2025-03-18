@@ -16,14 +16,15 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Install Mono + msbuild
+      - name: Install Mono with msbuild
         run: |
           sudo apt-get update
-          sudo apt-get install -y mono-complete msbuild
-
+          sudo apt-get install -y mono-devel
+          
       - name: Build AnchorFixer DLL with msbuild
         run: |
           msbuild AnchorFixer.csproj /p:Configuration=Release
+
 
       - name: Create mod zip
         run: |
