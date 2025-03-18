@@ -1,0 +1,24 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.2.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnchorFixer", "AnchorFixer.csproj", "{B12BA2C4-BFAD-CFEB-8B10-133AE993695F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B12BA2C4-BFAD-CFEB-8B10-133AE993695F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B12BA2C4-BFAD-CFEB-8B10-133AE993695F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B12BA2C4-BFAD-CFEB-8B10-133AE993695F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B12BA2C4-BFAD-CFEB-8B10-133AE993695F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {24430663-13E5-4706-82E2-9E8A4FCB2E59}
+	EndGlobalSection
+EndGlobal
