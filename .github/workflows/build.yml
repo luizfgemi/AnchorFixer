@@ -16,10 +16,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Install Mono
-        run: sudo apt-get install -y mono-complete
+      - name: Install Mono + msbuild
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y mono-complete msbuild
 
-      - name: Build AnchorFixer DLL with MSBuild (Mono)
+      - name: Build AnchorFixer DLL with msbuild
         run: |
           msbuild AnchorFixer.csproj /p:Configuration=Release
 
@@ -35,6 +37,7 @@ jobs:
         with:
           name: AnchorFixer-${{ github.ref_name }}
           path: dist/AnchorFixer-${{ github.ref_name }}.zip
+
 
   release:
     needs: build
