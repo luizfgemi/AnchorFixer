@@ -67,9 +67,6 @@ public class AnchorManager
         }
     }
 
-        Debug.Log($"[AnchorFixer] Save hook processed {totalAnchors} anchors. Restored {anchorsFixed} anchors.");
-    }
-
     public void SaveAnchorsToFile()
     {
         var dict = anchorOriginalPositions.ToDictionary(
@@ -115,7 +112,7 @@ public class AnchorManager
             Debug.Log("[AnchorFixer] Anchors file is empty or corrupted.");
         }
     }
-    
+
     public void EnsureAnchorsLoaded()
     {
         if (isLoaded) return;
@@ -124,10 +121,10 @@ public class AnchorManager
     }
 
     private Vector3d ParseVector(string vecStr)
-{
-    var parts = vecStr.Split(',').Select(s => double.Parse(s.Trim())).ToArray();
-    return new Vector3d(parts[0], parts[1], parts[2]);
-}
+    {
+        var parts = vecStr.Split(',').Select(s => double.Parse(s.Trim())).ToArray();
+        return new Vector3d(parts[0], parts[1], parts[2]);
+    }
 
     [System.Serializable]
     private class SerializableVector { public double x, y, z; }
