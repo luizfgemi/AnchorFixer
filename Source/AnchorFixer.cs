@@ -29,6 +29,8 @@ public class AnchorFixer : MonoBehaviour
 
     private void CheckAnchor(Part part)
     {
+        Debug.Log($"[AnchorFixer] Scanning part: {part.partName}, ID: {part.flightID}");
+
         if (part.partName.Contains("groundAnchor"))
         {
             Debug.Log($"[AnchorFixer] CheckAnchor detected: {part.partName}, ID: {part.flightID}, pos: {part.transform.position}");
