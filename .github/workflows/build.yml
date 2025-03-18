@@ -10,28 +10,26 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Install Mono with msbuild
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y mono-devel
+      - name: Setup MSBuild (Windows)
+        uses: microsoft/setup-msbuild@v1.1
 
-      - name: Build AnchorFixer DLL with msbuild
+      - name: Build AnchorFixer DLL on Windows
         run: |
-          mono /usr/lib/mono/msbuild/15.0/bin/MSBuild.dll AnchorFixer.csproj /p:Configuration=Release
-
+          msbuild AnchorFixer.csproj /p:Configuration=Release
 
       - name: Create mod zip
         run: |
-          mkdir -p dist/GameData/AnchorFixer/Plugins
-          cp bin/AnchorFixer.dll dist/GameData/AnchorFixer/Plugins/
-          cp AnchorFixer.version dist/GameData/AnchorFixer/
-          cd dist && zip -r AnchorFixer-${{ github.ref_name }}.zip GameData
+          mkdir dist\GameData\AnchorFixer\Plugins
+          copy .\bin\AnchorFixer.dll dist\GameData\AnchorFixer\Plugins\
+          copy .\AnchorFixer.version dist\GameData\AnchorFixer\
+          cd dist
+          Compress-Archive -Path GameData -DestinationPath AnchorFixer-${{ github.ref_name }}.zip
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
