@@ -37,7 +37,7 @@ jobs:
           cd dist && zip -r AnchorFixer-${{ github.ref_name }}.zip GameData
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: AnchorFixer-${{ github.ref_name }}
           path: dist/AnchorFixer-${{ github.ref_name }}.zip
