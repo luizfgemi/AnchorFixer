@@ -38,20 +38,32 @@ public class AnchorManager
         }
 
         string json = File.ReadAllText(savePath);
-        var data = (Dictionary<string, object>)MiniJSON.Deserialize(json);
+        if (string.IsNullOrWhiteSpace(json))
+        {
+            Debug.Log("[AnchorFixer] Anchors file is empty.");
+            return;
+        }
+
+        var data = MiniJSON.Deserialize(json) as Dictionary<string, object>;
 
         if (data != null && data.ContainsKey("anchors"))
         {
-            var anchors = (Dictionary<string, object>)data["anchors"];
-            foreach (var kv in anchors)
+            var anchors = data["anchors"] as Dictionary<string, object>;
+            if (anchors != null)
             {
-                var vecDict = (Dictionary<string, object>)kv.Value;
-                double x = Convert.ToDouble(vecDict["x"]);
-                double y = Convert.ToDouble(vecDict["y"]);
-                double z = Convert.ToDouble(vecDict["z"]);
-                anchorOriginalPositions[uint.Parse(kv.Key)] = new Vector3d(x, y, z);
+                foreach (var kv in anchors)
+                {
+                    var vecDict = kv.Value as Dictionary<string, object>;
+                    if (vecDict != null)
+                    {
+                        double x = Convert.ToDouble(vecDict["x"]);
+                        double y = Convert.ToDouble(vecDict["y"]);
+                        double z = Convert.ToDouble(vecDict["z"]);
+                        anchorOriginalPositions[uint.Parse(kv.Key)] = new Vector3d(x, y, z);
+                    }
+                }
+                Debug.Log("[AnchorFixer] Anchors loaded from file.");
             }
-            Debug.Log("[AnchorFixer] Anchors loaded from file.");
         }
         else
         {
