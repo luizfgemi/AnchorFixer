@@ -39,6 +39,7 @@ public class AnchorFixer : MonoBehaviour
 
     private void OnGameSave(ConfigNode node)
     {
+        Debug.Log("[AnchorFixer] Intercepting save event, validating anchors...");
         anchorManager.FixAnchorsInSave(node);
         anchorManager.SaveAnchorsToFile();
     }
@@ -49,4 +50,41 @@ public class AnchorFixer : MonoBehaviour
         GameEvents.onVesselWasModified.Remove(OnVesselModified);
         GameEvents.onGameStateSave.Remove(OnGameSave);
     }
+
+    public void FixAnchorsInSave(ConfigNode node)
+    {
+        var vessels = node.GetNode("FLIGHTSTATE")?.GetNodes("VESSEL");
+        if (vessels == null) return;
+
+        int totalAnchors = 0;
+        int anchorsFixed = 0;
+
+        foreach (var vessel in vessels)
+        {
+            foreach (var part in vessel.GetNodes("PART"))
+            {
+                string partName = part.GetValue("part");
+                if (partName.Contains("groundAnchor"))
+                {
+                    totalAnchors++;
+                    uint flightID = uint.Parse(part.GetValue("flightID"));
+                    if (anchorOriginalPositions.TryGetValue(flightID, out Vector3d originalPos))
+                    {
+                        string posStr = part.GetValue("pos");
+                        Vector3d currentPos = ParseVector(posStr);
+
+                        if (currentPos != originalPos)
+                        {
+                            anchorsFixed++;
+                            Debug.Log($"[AnchorFixer] Restoring ID {flightID} from {currentPos} to {originalPos}");
+                            part.SetValue("pos", $"{originalPos.x} , {originalPos.y} , {originalPos.z}", true);
+                        }
+                    }
+                }
+            }
+        }
+
+        Debug.Log($"[AnchorFixer] Save hook processed {totalAnchors} anchors. Restored {anchorsFixed} anchors.");
+    }
+
 }
