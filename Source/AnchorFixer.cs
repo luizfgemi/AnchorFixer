@@ -40,6 +40,7 @@ public class AnchorFixer : MonoBehaviour
     private void OnGameSave(ConfigNode node)
     {
         Debug.Log("[AnchorFixer] Intercepting save event, validating anchors...");
+        anchorManager.EnsureAnchorsLoaded();
         anchorManager.FixAnchorsInSave(node);
         anchorManager.SaveAnchorsToFile();
     }

@@ -8,6 +8,7 @@ public class AnchorManager
 {
     private Dictionary<uint, Vector3d> anchorOriginalPositions = new Dictionary<uint, Vector3d>();
     private string savePath;
+    private bool isLoaded = false;
 
     public AnchorManager()
     {
@@ -55,6 +56,16 @@ public class AnchorManager
                 }
             }
         }
+
+        if (totalAnchors > 0)
+        {
+            Debug.Log($"[AnchorFixer] Save hook processed {totalAnchors} anchors. Restored {anchorsFixed} anchors.");
+        }
+        else
+        {
+            Debug.Log("[AnchorFixer] Save hook found no deployed Ground Anchors in this scene.");
+        }
+    }
 
         Debug.Log($"[AnchorFixer] Save hook processed {totalAnchors} anchors. Restored {anchorsFixed} anchors.");
     }
@@ -104,12 +115,19 @@ public class AnchorManager
             Debug.Log("[AnchorFixer] Anchors file is empty or corrupted.");
         }
     }
+    
+    public void EnsureAnchorsLoaded()
+    {
+        if (isLoaded) return;
+        LoadAnchorsFromFile();
+        isLoaded = true;
+    }
 
     private Vector3d ParseVector(string vecStr)
-    {
-        var parts = vecStr.Split(',').Select(s => double.Parse(s.Trim())).ToArray();
-        return new Vector3d(parts[0], parts[1], parts[2]);
-    }
+{
+    var parts = vecStr.Split(',').Select(s => double.Parse(s.Trim())).ToArray();
+    return new Vector3d(parts[0], parts[1], parts[2]);
+}
 
     [System.Serializable]
     private class SerializableVector { public double x, y, z; }
