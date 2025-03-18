@@ -16,18 +16,21 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Setup MSBuild (Windows)
+      - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v1.1
 
-      - name: Build AnchorFixer DLL on Windows
+      - name: Build AnchorFixer DLL
         run: |
           msbuild AnchorFixer.csproj /p:Configuration=Release
 
-      - name: Create mod zip
+      - name: Prepare mod package
         run: |
           mkdir dist\GameData\AnchorFixer\Plugins
           copy .\bin\AnchorFixer.dll dist\GameData\AnchorFixer\Plugins\
           copy .\AnchorFixer.version dist\GameData\AnchorFixer\
+
+      - name: Create release zip (excluding Dependencies)
+        run: |
           cd dist
           Compress-Archive -Path GameData -DestinationPath AnchorFixer-${{ github.ref_name }}.zip
 
