@@ -2,11 +2,8 @@ name: Build and Release AnchorFixer
 
 on:
   push:
-    branches:
-      - main
-  workflow_dispatch:
-  release:
-    types: [published]
+    tags:
+      - 'v*'
 
 jobs:
   build:
@@ -19,7 +16,7 @@ jobs:
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v1.1
 
-      - name: Check required KSP dependencies
+      - name: Validate required DLLs
         run: |
           $required = @(
             "Dependencies/KSP/UnityEngine.dll",
@@ -33,8 +30,7 @@ jobs:
               exit 1
             }
           }
-          Write-Host "✅ All dependencies found!"
-          
+
       - name: Build AnchorFixer DLL
         run: |
           msbuild AnchorFixer.csproj /p:Configuration=Release
@@ -45,32 +41,24 @@ jobs:
           copy .\bin\AnchorFixer.dll dist\GameData\AnchorFixer\Plugins\
           copy .\AnchorFixer.version dist\GameData\AnchorFixer\
 
-      - name: Create release zip (excluding Dependencies)
+      - name: Create release zip
         run: |
           cd dist
           Compress-Archive -Path GameData -DestinationPath AnchorFixer-${{ github.ref_name }}.zip
 
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: AnchorFixer-${{ github.ref_name }}
-          path: dist/AnchorFixer-${{ github.ref_name }}.zip
-
-
-  release:
-    needs: build
-    runs-on: ubuntu-latest
-    if: github.event_name == 'release'
-
-    steps:
-      - name: Download artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: AnchorFixer-${{ github.ref_name }}
-
-      - name: Upload to GitHub Release
+      - name: Create GitHub Release and upload asset
         uses: softprops/action-gh-release@v2
         with:
-          files: AnchorFixer-${{ github.ref_name }}.zip
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          name: AnchorFixer ${{ github.ref_name }}
+          tag_name: ${{ github.ref_name }}
+          body: |
+            **AnchorFixer ${{ github.ref_name }}**
+
+            - Auto-registers Ground Anchors.
+            - Locks original positions.
+            - Fixes anchor drifting bug.
+            - Compatible with KSP 1.12.x.
+
+            ⚠️ **Backup your save before use!**
+
+          files: dist/AnchorFixer-${{ github.ref_name }}.zip
