@@ -22,7 +22,7 @@ This mod automatically detects when Ground Anchors are placed in the scene and p
 - Saves the anchor state to `PluginData/anchors.json` for persistence between game sessions.
 
 ### Credits:
-- **OliverWieland** for the original Python script ([ksp-anchor-keeper](https://github.com/OliverWieland/ksp-anchor-keeper))
+- **OliverWieland** for the original script ([ksp-anchor-keeper](https://github.com/OliverWieland/ksp-anchor-keeper))
 - **C# Mod Version:** by luizfgemi
 
 ### Installation:
