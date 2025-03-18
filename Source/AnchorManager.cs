@@ -1,4 +1,3 @@
-// AnchorManager.cs
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -73,10 +72,16 @@ public class AnchorManager
 
     public void RegisterAnchor(uint flightID, Vector3d position)
     {
+        Debug.Log($"[AnchorFixer] Trying to register ID {flightID} at position {position}");
+
         if (!anchorOriginalPositions.ContainsKey(flightID))
         {
             anchorOriginalPositions[flightID] = position;
             Debug.Log($"[AnchorFixer] Anchor registered ID {flightID}: {position}");
+        }
+        else
+        {
+            Debug.Log($"[AnchorFixer] Anchor ID {flightID} already registered.");
         }
     }
 

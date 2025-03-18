@@ -1,8 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using KSP;
-using System.Linq;
-using System.IO;
 
 [KSPAddon(KSPAddon.Startup.Flight, false)]
 public class AnchorFixer : MonoBehaviour
@@ -33,6 +31,7 @@ public class AnchorFixer : MonoBehaviour
     {
         if (part.partName.Contains("groundAnchor"))
         {
+            Debug.Log($"[AnchorFixer] CheckAnchor detected: {part.partName}, ID: {part.flightID}, pos: {part.transform.position}");
             anchorManager.RegisterAnchor(part.flightID, part.transform.position);
         }
     }
@@ -40,7 +39,6 @@ public class AnchorFixer : MonoBehaviour
     private void OnGameSave(ConfigNode node)
     {
         Debug.Log("[AnchorFixer] Intercepting save event, validating anchors...");
-        anchorManager.EnsureAnchorsLoaded();
         anchorManager.FixAnchorsInSave(node);
         anchorManager.SaveAnchorsToFile();
     }
