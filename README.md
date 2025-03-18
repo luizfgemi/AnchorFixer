@@ -1,4 +1,4 @@
-# ⚠️🚀 WARNING: BACKUP YOUR SAVE! 🚀⚠️
+# ⚠️ WARNING: BACKUP YOUR SAVE! ⚠️
 
 **This mod modifies your save files automatically. Always BACKUP your KSP saves before using AnchorFixer!**
 
@@ -8,8 +8,9 @@ Even though AnchorFixer is designed to fix a specific bug with Ground Anchors, a
 
 # AnchorFixer
 
-![GitHub Workflow Status](https://github.com/luizfgemi/AnchorFixer/actions/workflows/build.yml/badge.svg)
-![GitHub release (latest by date)](https://img.shields.io/github/v/release/luizfgemi/AnchorFixer)
+[![Build AnchorFixer](https://github.com/luizfgemi/AnchorFixer/actions/workflows/build.yml/badge.svg)](https://github.com/luizfgemi/AnchorFixer/actions)
+[![Latest Release](https://img.shields.io/github/v/release/luizfgemi/AnchorFixer?label=release)](https://github.com/luizfgemi/AnchorFixer/releases/latest)
+
 
 **C# Mod inspired by the original Python script "ksp-anchor-keeper" by OliverWieland**
 
