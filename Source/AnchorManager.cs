@@ -51,20 +51,27 @@ public class AnchorManager
         var dict = anchorOriginalPositions.ToDictionary(
             kv => kv.Key.ToString(),
             kv => new SerializableVector { x = kv.Value.x, y = kv.Value.y, z = kv.Value.z });
-        string json = JsonUtility.ToJson(new Wrapper { anchors = dict }, true);
+        string json = MiniJSON.Serialize(new Dictionary<string, object> { { "anchors", dict } });
         Directory.CreateDirectory(Path.GetDirectoryName(savePath));
         File.WriteAllText(savePath, json);
     }
 
     public void LoadAnchorsFromFile()
     {
-        if (!File.Exists(savePath)) return;
         string json = File.ReadAllText(savePath);
-        var data = JsonUtility.FromJson<Wrapper>(json);
-
-        foreach (var kv in data.anchors)
+        var data = (Dictionary<string, object>)MiniJSON.Deserialize(json);
+        
+        if (data != null && data.ContainsKey("anchors"))
         {
-            anchorOriginalPositions[uint.Parse(kv.Key)] = new Vector3d(kv.Value.x, kv.Value.y, kv.Value.z);
+            var anchors = (Dictionary<string, object>)data["anchors"];
+            foreach (var kv in anchors)
+            {
+                var vecDict = (Dictionary<string, object>)kv.Value;
+                double x = Convert.ToDouble(vecDict["x"]);
+                double y = Convert.ToDouble(vecDict["y"]);
+                double z = Convert.ToDouble(vecDict["z"]);
+                anchorOriginalPositions[uint.Parse(kv.Key)] = new Vector3d(x, y, z);
+            }
         }
         Debug.Log("[AnchorFixer] Anchors loaded from file.");
     }
