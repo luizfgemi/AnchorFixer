@@ -1,3 +1,4 @@
+// AnchorManager.cs
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -10,9 +11,52 @@ public class AnchorManager
     private string savePath;
     private bool isLoaded = false;
 
-    public AnchorManager()
+    private void EnsureSavePath()
     {
-        savePath = Path.Combine(KSPUtil.ApplicationRootPath, "GameData", "AnchorFixer", "PluginData", "anchors.json");
+        if (string.IsNullOrEmpty(savePath))
+        {
+            savePath = Path.Combine(KSPUtil.ApplicationRootPath, "GameData", "AnchorFixer", "PluginData", "anchors.json");
+            Debug.Log($"[AnchorFixer] Save path initialized: {savePath}");
+        }
+    }
+
+    public void EnsureAnchorsLoaded()
+    {
+        if (isLoaded) return;
+        LoadAnchorsFromFile();
+        isLoaded = true;
+    }
+
+    public void LoadAnchorsFromFile()
+    {
+        EnsureSavePath();
+
+        if (!File.Exists(savePath))
+        {
+            Debug.Log("[AnchorFixer] No anchors file found. Starting with empty data.");
+            return;
+        }
+
+        string json = File.ReadAllText(savePath);
+        var data = (Dictionary<string, object>)MiniJSON.Deserialize(json);
+
+        if (data != null && data.ContainsKey("anchors"))
+        {
+            var anchors = (Dictionary<string, object>)data["anchors"];
+            foreach (var kv in anchors)
+            {
+                var vecDict = (Dictionary<string, object>)kv.Value;
+                double x = Convert.ToDouble(vecDict["x"]);
+                double y = Convert.ToDouble(vecDict["y"]);
+                double z = Convert.ToDouble(vecDict["z"]);
+                anchorOriginalPositions[uint.Parse(kv.Key)] = new Vector3d(x, y, z);
+            }
+            Debug.Log("[AnchorFixer] Anchors loaded from file.");
+        }
+        else
+        {
+            Debug.Log("[AnchorFixer] Anchors file is empty or corrupted.");
+        }
     }
 
     public void RegisterAnchor(uint flightID, Vector3d position)
@@ -69,55 +113,14 @@ public class AnchorManager
 
     public void SaveAnchorsToFile()
     {
+        EnsureSavePath();
+
         var dict = anchorOriginalPositions.ToDictionary(
             kv => kv.Key.ToString(),
             kv => new SerializableVector { x = kv.Value.x, y = kv.Value.y, z = kv.Value.z });
         string json = MiniJSON.Serialize(new Dictionary<string, object> { { "anchors", dict } });
         Directory.CreateDirectory(Path.GetDirectoryName(savePath));
         File.WriteAllText(savePath, json);
-    }
-
-    public void LoadAnchorsFromFile()
-    {
-        if (string.IsNullOrEmpty(savePath))
-        {
-            Debug.Log("[AnchorFixer] Save path is not set. Cannot load anchors.");
-            return;
-        }
-
-        if (!File.Exists(savePath))
-        {
-            Debug.Log("[AnchorFixer] No anchors file found. Starting with empty data.");
-            return;
-        }
-
-        string json = File.ReadAllText(savePath);
-        var data = (Dictionary<string, object>)MiniJSON.Deserialize(json);
-
-        if (data != null && data.ContainsKey("anchors"))
-        {
-            var anchors = (Dictionary<string, object>)data["anchors"];
-            foreach (var kv in anchors)
-            {
-                var vecDict = (Dictionary<string, object>)kv.Value;
-                double x = Convert.ToDouble(vecDict["x"]);
-                double y = Convert.ToDouble(vecDict["y"]);
-                double z = Convert.ToDouble(vecDict["z"]);
-                anchorOriginalPositions[uint.Parse(kv.Key)] = new Vector3d(x, y, z);
-            }
-            Debug.Log("[AnchorFixer] Anchors loaded from file.");
-        }
-        else
-        {
-            Debug.Log("[AnchorFixer] Anchors file is empty or corrupted.");
-        }
-    }
-
-    public void EnsureAnchorsLoaded()
-    {
-        if (isLoaded) return;
-        LoadAnchorsFromFile();
-        isLoaded = true;
     }
 
     private Vector3d ParseVector(string vecStr)
