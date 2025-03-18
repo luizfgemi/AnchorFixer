@@ -23,7 +23,6 @@ This mod automatically detects when Ground Anchors are placed in the scene and p
 
 ### Credits:
 - **OliverWieland** for the original script ([ksp-anchor-keeper](https://github.com/OliverWieland/ksp-anchor-keeper))
-- **C# Mod Version:** by luizfgemi
 
 ### Installation:
 1. Download the latest release from the [releases page](https://github.com/YourNameHere/AnchorFixer/releases).
