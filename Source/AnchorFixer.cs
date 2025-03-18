@@ -50,5 +50,4 @@ public class AnchorFixer : MonoBehaviour
         GameEvents.onVesselWasModified.Remove(OnVesselModified);
         GameEvents.onGameStateSave.Remove(OnGameSave);
     }
-
 }
