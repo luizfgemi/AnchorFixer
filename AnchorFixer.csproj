@@ -11,15 +11,15 @@
 
   <ItemGroup>
     <Reference Include="UnityEngine">
-      <HintPath>$(KSPPath)\KSP_x64_Data\Managed\UnityEngine.dll</HintPath>
+      <HintPath>Dependencies/KSP/UnityEngine.dll</HintPath>
     </Reference>
     <Reference Include="Assembly-CSharp">
-      <HintPath>$(KSPPath)\GameData\KSP_x64_Data\Managed\Assembly-CSharp.dll</HintPath>
+      <HintPath>Dependencies/KSP/Assembly-CSharp.dll</HintPath>
     </Reference>
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="Source\*.cs" />
+    <Compile Include="Source\**\*.cs" />
   </ItemGroup>
 
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
