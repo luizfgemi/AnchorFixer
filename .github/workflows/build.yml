@@ -1,4 +1,4 @@
-name: Build and Release AnchorFixer
+name: Build AnchorFixer
 
 on:
   push:
@@ -46,19 +46,8 @@ jobs:
           cd dist
           Compress-Archive -Path GameData -DestinationPath AnchorFixer-${{ github.ref_name }}.zip
 
-      - name: Create GitHub Release and upload asset
-        uses: softprops/action-gh-release@v2
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v3
         with:
-          name: AnchorFixer ${{ github.ref_name }}
-          tag_name: ${{ github.ref_name }}
-          body: |
-            **AnchorFixer ${{ github.ref_name }}**
-
-            - Auto-registers Ground Anchors.
-            - Locks original positions.
-            - Fixes anchor drifting bug.
-            - Compatible with KSP 1.12.x.
-
-            ⚠️ **Backup your save before use!**
-
-          files: dist/AnchorFixer-${{ github.ref_name }}.zip
+          name: AnchorFixer-${{ github.ref_name }}
+          path: dist/AnchorFixer-${{ github.ref_name }}.zip
