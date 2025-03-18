@@ -1,20 +1,27 @@
-<Project Sdk="Microsoft.NET.Sdk">
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
   <PropertyGroup>
-    <TargetFramework>net472</TargetFramework>
+    <Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <OutputPath>bin\</OutputPath>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <AssemblyName>AnchorFixer</AssemblyName>
-    <RootNamespace>AnchorFixer</RootNamespace>
     <OutputType>Library</OutputType>
-    <OutputPath>bin/</OutputPath>
   </PropertyGroup>
 
   <ItemGroup>
-    <Reference Include="Assembly-CSharp">
-      <HintPath>$(KSPPath)GameData/KSP_x64_Data/Managed/Assembly-CSharp.dll</HintPath>
-    </Reference>
     <Reference Include="UnityEngine">
-      <HintPath>$(KSPPath)KSP_x64_Data/Managed/UnityEngine.dll</HintPath>
+      <HintPath>$(KSPPath)\KSP_x64_Data\Managed\UnityEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="Assembly-CSharp">
+      <HintPath>$(KSPPath)\GameData\KSP_x64_Data\Managed\Assembly-CSharp.dll</HintPath>
     </Reference>
   </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="Source\*.cs" />
+  </ItemGroup>
+
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 
 </Project>
